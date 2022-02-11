@@ -27,6 +27,9 @@ func ConnectDB() *gorm.DB {
 	db.AutoMigrate(
 		entity.UserBasicAuth{},
 		entity.User{},
+		entity.Product{},
+		entity.Comodity{},
+		entity.StatusOrder{},
 	)
 
 	return db
