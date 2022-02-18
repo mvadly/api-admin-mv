@@ -14,39 +14,48 @@ import (
 
 var typeExt = []string{".jpg", ".png", ".jpeg"}
 
-func UploadFile(c *gin.Context, fileName, pathFolder string) (string, error) {
+func UploadFile(c *gin.Context, fileName, pathFolder string) (interface{}, string, error) {
 	exist, err := Exists(pathFolder)
 	if !exist {
 		err := os.Mkdir(pathFolder, 0777)
 		if err != nil {
-			return "can't create folder " + pathFolder, err
+			return nil, "can't create folder " + pathFolder, err
 		}
 	}
 
 	file, err := c.FormFile(fileName)
 	if err != nil {
-		return "form file undefined", err
+		return nil, "form file undefined", err
 	}
+
+	fmt.Println("file: ", fileName)
+	fmt.Println("file: ", file.Filename)
+	fmt.Println("file: ", file.Size)
+	fmt.Println("file: ", file.Header)
 
 	fileSize := file.Size / 1024
 
 	if fileSize > 500 {
-		return fmt.Sprintf("file size is %vkb and its too large, max 500kb", fileSize), fmt.Errorf("file size is too large")
+		return nil, fmt.Sprintf("file size is %vkb and its too large, max 500kb", fileSize), fmt.Errorf("file size is too large")
 	}
 
 	fileType := strings.ToLower(filepath.Ext(file.Filename))
 	imgAllow := InArray(fileType, typeExt)
-
+	fmt.Println("file type: ", fileType)
 	if imgAllow == false {
-		return "file type not support", fmt.Errorf("file type unknown")
+		return nil, "file type not support", fmt.Errorf("file type unknown")
 	}
 
-	filename := pathFolder + uuid.New().String() + fileType
-	if err := c.SaveUploadedFile(file, filename); err != nil {
-		return "error save file", err
+	filename := uuid.New().String() + fileType
+	pathSave := pathFolder + filename
+
+	if err := c.SaveUploadedFile(file, pathSave); err != nil {
+		return nil, "error save file", err
 	}
 
-	return "file " + fileType + " saved", err
+	fmt.Println("file saved")
+
+	return "/" + pathSave, "file " + fileType + " saved", err
 }
 
 func InArray(a interface{}, list []string) bool {
