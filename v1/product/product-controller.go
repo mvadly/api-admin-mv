@@ -30,10 +30,11 @@ func ListProduct(c *gin.Context) {
 
 func AddProduct(c *gin.Context) {
 	var post Product
-	if err := c.ShouldBind(&post); err != nil {
-		c.JSON(400, gin.H{"err": err, "message": "error from bind struct"})
-		return
-	}
+	// if err := c.ShouldBind(&post); err != nil {
+	// 	c.JSON(400, gin.H{"err": err, "message": "error from bind struct"})
+	// 	return
+	// }
+	c.ShouldBind(&post)
 
 	err := post.Validate()
 	if err != nil {

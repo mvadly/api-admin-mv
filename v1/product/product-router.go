@@ -10,5 +10,6 @@ func Router(r *gin.Engine) {
 	{
 		v1.GET("products", ListProduct)
 		v1.POST("product", AddProduct)
+		v1.PUT("product", AddProduct)
 	}
 }

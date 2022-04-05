@@ -10,5 +10,7 @@ type Product struct {
 	Status      int     `gorm:"column:status;type:tinyint;default:0" json:"status"`
 	ComodityId  string  `gorm:"column:comodity_id;type:varchar(30);" json:"comodity_id"`
 	ImgProduct  string  `gorm:"column:img_product;type:text;" json:"img_product"`
+	DateProduct string  `gorm:"column:date_product;type:date;" json:"date_product"`
+	ExpProduct  string  `gorm:"column:exp_product;type:date;" json:"exp_product"`
 	Global
 }
